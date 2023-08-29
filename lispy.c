@@ -1,27 +1,26 @@
 #include "ascii.h"
 #include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
 #include <stdbool.h>
+#include <readline/readline.h>
+#include <readline/history.h>
 
 #define VERSION "0.1.0"
-#define MAX_INPUT_LENGTH 2048
 
 int main(int argc, char **argv) {
-    char input[MAX_INPUT_LENGTH];
-    long len;
+    char *input;
 
     fputs("Lispy version " VERSION " \n", stdout);
     while (true) {
-        fputs("Lispy> ", stdout);
-        if (fgets(input, MAX_INPUT_LENGTH, stdin) == NULL) {
-            fputs("\n", stdout);
+        input = readline("Lispy> ");
+        if (input == NULL)
             break;
-        }
-        len = strlen(input);
-        input[len--] = CTL_NUL;
-        if (len == 0)
+        if (input[0] == CTL_NUL)
             continue;
-        printf("%s", input);
+        if (input[0] != ' ')
+            add_history(input);
+        printf("%s\n", input);
     }
 
     return 0;
